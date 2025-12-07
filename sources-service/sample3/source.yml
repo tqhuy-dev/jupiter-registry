@@ -5,5 +5,5 @@ members:
 metadata:
   programming_language: golang
   framework: uranus
-  module: github.com/tqhuy_dev/sample
+  module: github.com/tqhuy_dev/sample32
 
