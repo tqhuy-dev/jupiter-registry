@@ -1,0 +1,55 @@
+name: Generate Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'sources-service/**'
+
+jobs:
+  detect-new-services:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Cần fetch 2 commits để so sánh
+      
+      - name: Detect new service folders
+        id: detect
+        run: |
+          echo "🔍 Checking for new service folders..."
+          
+          # Lấy danh sách files thay đổi giữa commit hiện tại và commit trước
+          # Chỉ lấy những file mới được thêm (A = Added)
+          CHANGED_FILES=$(git diff --name-status --diff-filter=A HEAD~1 HEAD -- sources-service/)
+          
+          echo "📁 Added files:"
+          echo "$CHANGED_FILES"
+          echo ""
+          
+          # Lọc ra các folder mới (lấy tên folder từ path)
+          # Format: sources-service/{folder_name}/source.yml
+          NEW_FOLDERS=$(echo "$CHANGED_FILES" | \
+            grep -E "^A\s+sources-service/[^/]+/source\.yml$" | \
+            sed 's|A[[:space:]]*sources-service/\([^/]*\)/source\.yml|\1|' | \
+            sort -u)
+          
+          echo "🆕 New service folders detected:"
+          echo "$NEW_FOLDERS"
+          echo ""
+          
+          if [ -z "$NEW_FOLDERS" ]; then
+            echo "❌ No new service folders found."
+            echo "has_new_services=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Found new service folders!"
+            echo "has_new_services=true" >> $GITHUB_OUTPUT
+            
+            # Lưu danh sách để step sau dùng
+            echo "new_services<<EOF" >> $GITHUB_OUTPUT
+            echo "$NEW_FOLDERS" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
