@@ -244,7 +244,7 @@ func pushToRepo(appName string) error {
 		{"git", []string{"config", "user.email", "github-actions[bot]@users.noreply.github.com"}},
 		{"git", []string{"config", "user.name", "github-actions[bot]"}},
 		{"git", []string{"remote", "add", "origin", repoURL}},
-		{"git", []string{"add", "."}},
+		{"git", []string{"add", "-A"}},
 		{"git", []string{"commit", "-m", "Initial commit from jupiter-registry"}},
 		{"git", []string{"branch", "-M", "main"}},
 		{"git", []string{"push", "-u", "origin", "main", "--force"}},
