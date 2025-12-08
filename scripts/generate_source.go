@@ -225,10 +225,7 @@ func pushToRepo(appName string) error {
 		ghToken = os.Getenv("GITHUB_TOKEN")
 	}
 
-	repoOwner := os.Getenv("GITHUB_REPOSITORY_OWNER")
-	if repoOwner == "" {
-		repoOwner = "tqhuy-dev" // Default owner
-	}
+	repoOwner := "tqhuy-dev"
 
 	// Build repo URL with token for authentication
 	var repoURL string
