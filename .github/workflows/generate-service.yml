@@ -76,6 +76,9 @@ jobs:
         run: go mod tidy
       
       - name: Process each new service
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: |
           echo "🚀 Processing new services..."
           echo ""
@@ -89,7 +92,7 @@ jobs:
               echo "📦 Processing: $service"
               echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
               
-              # Chạy Go script để đọc source.yml và print DTO
+              # Chạy Go script để generate và push service
               go run scripts/generate_source.go "sources-service/$service"
               
               echo ""
